@@ -1,0 +1,1 @@
+Bevásárló lista alkalmazás
