@@ -8,30 +8,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Lidl bevásárló lista elemei</h1>
-        <form class="input-group">
-            <button>+</button>
+        <h1>
+            <div id="store-name"></div>
+        </h1>
+        <form id="new-item-form">
+            <button type="submit">+</button>
             <input type="text"  id="new-item-name" placeholder="Új lista elem" required>
         </form>
 
+
+        <ul id="items-list"></ul>
+
         <ul>
-            <li>
-                <button>E</button>
-                <input type="checkbox" >
-                Alma
-            </li>
-            <li>
-                <button>E</button>
-                <input type="checkbox" >
-                Körte
-            </li>
-            <li>
-                <button>E</button>
-                <input type="checkbox" >
-                Kenyér
+            <li class="items-list-li">
+                <div class="edit-item-section">
+                    <button>Szerk.</button>
+                    <input type="checkbox" >
+                </div>
+                <div class="edit-item-name">
+                    Alma teszt
+                </div>                
             </li>
         </ul>
         <a href="./index.html">Vissza az üzletekhez</a>
     </div>
+    <script src="./js/items.js"></script>
 </body>
 </html>

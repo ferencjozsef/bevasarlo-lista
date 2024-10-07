@@ -9,29 +9,20 @@
 <body>
     <div class="container">
         <h1>Üzletek</h1>
-        <form class="input-group">
-            <button>+</button>
-            <input type="text"  id="new-store-name" placeholder="Új üzlet neve" required>
+        <form id="new-store-form">
+            <button type="submit">+</button>
+            <input type="text" id="new-store-name" placeholder="Új üzlet neve" required>
         </form>
 
-        <ul>
+        <ul id="stores-list"></ul>
+
+        <!--ul>
             <li>
-                <button>E</button>
-                <a href="./items.html">Lidl</a>
+                <button class="edit-store-button">Szerk.</button>
+                <a href="./items.html">Lidl teszt sor</a>
             </li>
-            <li>
-                <button>E</button>
-                Spár
-            </li>
-            <li>
-                <button>E</button>
-                Adidas
-            </li>
-            <li>
-                <button>E</button>
-                OBI
-            </li>
-        </ul>
+        </ul-->
     </div>
+    <script src="./js/stores.js"></script>
 </body>
 </html>
