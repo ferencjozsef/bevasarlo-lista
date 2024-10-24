@@ -19,24 +19,48 @@ async function fetchItems() {
 
     store.items.forEach(item => {
         const itemElement = document.createElement('li');
+        itemElement.className = 'list-group-item';
 
         itemElement.innerHTML = `
-            <div class="edit-item-section">
-                <button id="btn-edit-item-${item.id}">Szerk.</button>
-                <input type="checkbox" ${item.purchased ? 'checked' : ''} onclick="toggleItemPurchased('${item.id}', '${item.name}', this.checked)">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal${item.id}">
+            Szerk.
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modal${item.id}" tabindex="-1" aria-labelledby="modalLabel${item.id}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalLabel${item.id}">Üzlet szerkesztése</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Üzlet neve:</label>
+                                    <input type="text" class="form-control" id="item-name-${item.id}" value="${item.name}">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteItem(${item.id})">Törlés</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Mégse</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editItem(${item.id})">Mentés</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="edit-item-name">
+            <input class="item-checkbox" type="checkbox" ${item.purchased ? 'checked' : ''} onclick="toggleItemPurchased('${item.id}', '${item.name}', this.checked)">
         `;
 
         if (item.purchased === true) {
             itemElement.innerHTML += `
-                <p><del>${item.name}</del></p>
-                </div>
+                <del>${item.name}</del>
             `;
         } else {
             itemElement.innerHTML += `
-                <p>${item.name}</p>
-                </div>
+                ${item.name}
             `;
         }
 
@@ -64,7 +88,7 @@ document.getElementById('new-item-form').addEventListener('submit', async (e) =>
     }
 });
 
-// Tételek vásárlási állapotának állítása
+// Tétel állapotának módosítása
 async function toggleItemPurchased(itemId, name, isChecked) {
     try {
         await fetch(`${apiUrl}/stores/${storeId}/items/${itemId}`, {
@@ -78,6 +102,42 @@ async function toggleItemPurchased(itemId, name, isChecked) {
 
     fetchItems();
 }
+
+// Tétel törlése
+async function deleteItem(itemId) {
+    try {
+        await fetch(`${apiUrl}/stores/${storeId}/items/${itemId}`, {
+            method: 'DELETE'
+        });
+
+        fetchItems();
+    } catch (error) {
+        console.error('Hiba a tétel törlésekor:', error);
+    }
+}
+
+// Tétel szerkesztése
+async function editItem(itemId) {
+    const itemNameInput = document.getElementById(`item-name-${itemId}`);
+    const updatedName = itemNameInput.value;
+
+    try {
+        const response = await fetch(`${apiUrl}/stores/${storeId}/items/${itemId}`);
+        const item = await response.json();
+
+        await fetch(`${apiUrl}/stores/${storeId}/items/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({id: item.id, name: updatedName, purchased: item.purchased})
+        });
+
+        fetchItems();
+    } catch (error) {
+        console.error('Hiba a tétel Mentésekor:', error);
+    }
+}
+
+
 
 // Inicializálás
 fetchStore();

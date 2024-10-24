@@ -9,9 +9,39 @@ async function fetchStores() {
 
     stores.forEach(store => {
         const storeElement = document.createElement('li');
+        storeElement.className = 'list-group-item';
 
         storeElement.innerHTML = `
-            <button class="edit-store-button">Szerk.</button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal${store.id}">
+            Szerk.
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modal${store.id}" tabindex="-1" aria-labelledby="modalLabel${store.id}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalLabel${store.id}">Üzlet szerkesztése</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Üzlet neve:</label>
+                                    <input type="text" class="form-control" id="store-name-${store.id}" value="${store.name}">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteStore(${store.id})">Törlés</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégse</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editStore(${store.id})">Mentés</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <a href="./items.html?storeId=${store.id}">${store.name}</a>
         `;
 
@@ -38,6 +68,40 @@ document.getElementById('new-store-form').addEventListener('submit', async (e) =
         console.error('Hiba az üzlet hozzáadásakor:', error);
     }
 });
+
+// Üzlet törlése
+async function deleteStore(storeId) {
+    try {
+        await fetch(`${apiUrl}/stores/${storeId}`, {
+            method: 'DELETE'
+        });
+
+        fetchStores();
+    } catch (error) {
+        console.error('Hiba az üzlet törlésekor:', error);
+    }
+}
+
+
+// Üzlet szerkesztése
+async function editStore(storeId) {
+    const storeNameInput = document.getElementById(`store-name-${storeId}`);
+    const updatedName = storeNameInput.value;
+
+    try {
+        const response = await fetch(`${apiUrl}/stores/${storeId}`);
+
+        await fetch(`${apiUrl}/stores/${storeId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({name: updatedName})
+        });
+
+        fetchStores();
+    } catch (error) {
+        console.error('Hiba a tétel Mentésekor:', error);
+    }
+}
 
 // Inicializálás
 fetchStores();
