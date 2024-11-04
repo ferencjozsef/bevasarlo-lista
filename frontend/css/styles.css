@@ -5,9 +5,9 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    background-image: url("../images/background.jpeg");
-    background-size: cover;
+    background-color: #1c73b1;
+    /*background-image: url("../images/kép5.jpeg");
+    background-size: cover;*/
 }
 
 h1 {
@@ -17,10 +17,11 @@ h1 {
 
 .container {
     background-color: #fff;
+    margin-top: 20px;
     padding: 20px;
     border-radius: 18px;
-    width: 600px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 ul {
@@ -33,26 +34,54 @@ li {
 }
 
 .btn {
-    margin-right: 20px;
+    /*margin-right: 20px;*/
 }
 
 
+   
 /* index.html */
-
 #new-store-form {
-    margin: 20px;
+    margin-bottom: 20px;
 }
 
 #new-store-name {
-    margin-left: 20px;
+    width: 85%;
 }
 
 /* items.html */
 
 #new-item-form {
-    margin: 20px;
+    margin-bottom: 20px;
 }
 
+#new-item-name {
+    width: 85%;
+}
 .item-checkbox {
     margin-right: 20px;
+}
+
+
+
+@media screen and (min-width: 576px) {
+    .container {
+        width: 500px;
+    }
+
+    #new-store-name {
+        margin-left: 20px;
+    }
+
+}
+
+@media screen and (min-width: 768px){
+    .container {
+        width: 600px;
+    }
+}
+
+@media screen and (min-width: 992px){
+    .container {
+        width: 700px;
+    }
 }
