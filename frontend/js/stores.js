@@ -42,7 +42,7 @@ async function fetchStores() {
                 </div>
             </div>
             
-            <a href="./items.html?storeId=${store.id}">${store.name}</a>
+            <a class="store-name-link" href="./items.html?storeId=${store.id}">${store.name}</a>
         `;
 
         storesList.appendChild(storeElement);
