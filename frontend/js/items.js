@@ -19,13 +19,14 @@ async function fetchItems() {
 
     store.items.forEach(item => {
         const itemElement = document.createElement('li');
-        itemElement.className = 'list-group-item';
+        itemElement.className = "list-group-item";
+        itemElement.id = `${item.id}`;
 
         itemElement.innerHTML = `
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal${item.id}">
-            Szerk.
-            </button>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal${item.id}">✏️</button>
+            <button class="btn btn-secondary move-up btn-sm">▲</button>
+            <button class="btn btn-secondary move-down btn-sm">▼</button>
 
             <!-- Modal -->
             <div class="modal fade" id="modal${item.id}" tabindex="-1" aria-labelledby="modalLabel${item.id}" aria-hidden="true">
@@ -66,6 +67,8 @@ async function fetchItems() {
 
         itemsList.appendChild(itemElement);
     });
+
+    attachMoveButtons();
 }
 
 // Új tétel hozzáadása
@@ -137,7 +140,46 @@ async function editItem(itemId) {
     }
 }
 
+function attachMoveButtons() {
+    document.querySelectorAll('.move-up').forEach(button => {
+        button.addEventListener('click', function () {
+            const itemElement = this.closest('li');
+            const prevElement = itemElement.previousElementSibling;
+            if (prevElement) {
+                itemElement.parentNode.insertBefore(itemElement, prevElement);
+                updateItemOrder();
+            }
+        });
+    });
 
+    document.querySelectorAll('.move-down').forEach(button => {
+        button.addEventListener('click', function () {
+            const itemElement = this.closest('li');
+            const nextElement = itemElement.nextElementSibling;
+            if (nextElement) {
+                itemElement.parentNode.insertBefore(nextElement, itemElement);
+                updateItemOrder();
+            }
+        });
+    });
+}
+
+async function updateItemOrder() {
+    const items = Array.from(document.querySelectorAll('#items-list li')).map((el, index) => ({
+        id: el.getAttribute('id'),
+        position: index
+    }));
+
+    try {
+        await fetch(`${apiUrl}/stores/${storeId}/items/reorder`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
+        });
+    } catch (error) {
+        console.error('Hiba a sorrend frissítésekor:', error);
+    }
+}
 
 // Inicializálás
 fetchStore();
