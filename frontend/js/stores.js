@@ -12,10 +12,13 @@ async function fetchStores() {
         storeElement.className = 'list-group-item';
 
         storeElement.innerHTML = `
+            <a class="store-name-link" href="./items.html?storeId=${store.id}">${store.name}</a>
+
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal${store.id}">
-            Szerk.
-            </button>
+            <div class="buttons">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal${store.id}">✏️</button>
+            </div>
+            
 
             <!-- Modal -->
             <div class="modal fade" id="modal${store.id}" tabindex="-1" aria-labelledby="modalLabel${store.id}" aria-hidden="true">
@@ -41,8 +44,6 @@ async function fetchStores() {
                     </div>
                 </div>
             </div>
-            
-            <a class="store-name-link" href="./items.html?storeId=${store.id}">${store.name}</a>
         `;
 
         storesList.appendChild(storeElement);

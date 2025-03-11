@@ -19,14 +19,36 @@ async function fetchItems() {
 
     store.items.forEach(item => {
         const itemElement = document.createElement('li');
-        itemElement.className = "list-group-item";
+        if (item.purchased === true) {
+            itemElement.className = "list-group-item checked";
+        } else {
+            itemElement.className = "list-group-item";
+        }
+
         itemElement.id = `${item.id}`;
 
-        itemElement.innerHTML = `
+        itemElement.innerHTML = ``;
+
+        itemElement.innerHTML += `<input class="item-checkbox" type="checkbox" ${item.purchased ? 'checked' : ''} onclick="toggleItemPurchased('${item.id}', '${item.name}', this.checked)"></input>`
+
+        if (item.purchased === true) {
+            itemElement.innerHTML += `
+                <span class="text"><del>${item.name}</del></span>
+            `;
+        } else {
+            itemElement.innerHTML += `
+                <span class="text">${item.name}</span>
+            `;
+        }
+        
+
+        itemElement.innerHTML += `
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal${item.id}">✏️</button>
-            <button class="btn btn-secondary move-up btn-sm">▲</button>
-            <button class="btn btn-secondary move-down btn-sm">▼</button>
+            <div class="buttons">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal${item.id}">✏️</button>
+                <button class="btn btn-secondary move-up btn-sm">▲</button>
+                <button class="btn btn-secondary move-down btn-sm">▼</button>
+            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="modal${item.id}" tabindex="-1" aria-labelledby="modalLabel${item.id}" aria-hidden="true">
@@ -52,18 +74,8 @@ async function fetchItems() {
                     </div>
                 </div>
             </div>
-            <input class="item-checkbox" type="checkbox" ${item.purchased ? 'checked' : ''} onclick="toggleItemPurchased('${item.id}', '${item.name}', this.checked)">
+            
         `;
-
-        if (item.purchased === true) {
-            itemElement.innerHTML += `
-                <del>${item.name}</del>
-            `;
-        } else {
-            itemElement.innerHTML += `
-                ${item.name}
-            `;
-        }
 
         itemsList.appendChild(itemElement);
     });
